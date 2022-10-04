@@ -15,24 +15,7 @@ function headingRenderer(tagElementId) {
   return renderer;
 }
 
-function expandCollapseTagDescription(e) {
-  const tagDescriptionEl = e.target.closest('.tag-container').querySelector('.tag-description');
-  const tagIconEl = e.target.closest('.tag-container').querySelector('.tag-icon');
-  if (tagDescriptionEl && tagIconEl) {
-    const isExpanded = tagDescriptionEl.classList.contains('expanded');
-    if (isExpanded) {
-      tagDescriptionEl.style.maxHeight = 0;
-      tagDescriptionEl.classList.replace('expanded', 'collapsed');
-      tagIconEl.classList.replace('expanded', 'collapsed');
-    } else {
-      tagDescriptionEl.style.maxHeight = `${tagDescriptionEl.scrollHeight}px`;
-      tagDescriptionEl.classList.replace('collapsed', 'expanded');
-      tagIconEl.classList.replace('collapsed', 'expanded');
-    }
-  }
-}
-
-export function expandedEndpointBodyTemplate(path, tagName = '', tagDescription = '') {
+export function expandedEndpointBodyTemplate(path, tagName = '') {
   const acceptContentTypes = new Set();
   for (const respStatus in path.responses) {
     for (const acceptContentType in (path.responses[respStatus]?.content)) {
@@ -54,26 +37,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '', tagDescription 
   return html`
     ${this.renderStyle === 'read' ? html`<div class='divider' part="operation-divider"></div>` : ''}
     <div class='expanded-endpoint-body observe-me ${path.method} ${path.deprecated ? 'deprecated' : ''} ' part="section-operation ${path.elementId}" id='${path.elementId}'>
-      ${(this.renderStyle === 'focused' && tagName !== 'General ⦂')
-        ? html`
-          <div class="tag-container" part="section-operation-tag"> 
-            <span class="upper" style="font-weight:bold; font-size:18px;"> ${tagName} </span>
-            ${tagDescription
-              ? html`
-                <svg class="tag-icon collapsed" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" fill="none" style="stroke:var(--primary-color); vertical-align:top; cursor:pointer"
-                @click="${(e) => { expandCollapseTagDescription.call(this, e); }}"
-                >
-                  <path d="M12 20h-6a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8"></path><path d="M18 4v17"></path><path d="M15 18l3 3l3 -3"></path>
-                </svg>
-                <div class="tag-description collapsed" style="max-height:0px; overflow:hidden; margin-top:16px; border:1px solid var(--border-color)"> 
-                  <div class="m-markdown" style="padding:8px"> ${unsafeHTML(marked(tagDescription))}</div>  
-                </div>`
-              : ''
-            }  
-          </div>
-        `
-        : ''
-      }
+      ${(this.renderStyle === 'focused' && tagName !== 'General ⦂') ? html`<h3 class="upper" style="font-weight:bold" part="section-operation-tag"> ${tagName} </h3>` : ''}
       ${path.deprecated ? html`<div class="bold-text red-text"> DEPRECATED </div>` : ''}
       ${html`
         ${path.xBadges && path.xBadges?.length > 0
@@ -89,10 +53,10 @@ export function expandedEndpointBodyTemplate(path, tagName = '', tagDescription 
         }
         <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook
-          ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
+          ? html`<span part="section-operation-webhook style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
           : html`
-            <div part="section-operation-webhook-method" class="mono-font regular-font-size" style="text-align:left; direction:ltr; padding: 8px 0; color:var(--fg3)"> 
-              <span part="label-operation-method" class="regular-font upper method-fg bold-text ${path.method}">${path.method}</span> 
+            <div class='mono-font part="section-operation-webhook-method" regular-font-size' style='text-align:left; direction:ltr; padding: 8px; color:var(--fg3); background-color: var(--bg3);'> 
+              <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
               <span part="label-operation-path">${path.path}</span>
             </div>
           `
@@ -101,18 +65,6 @@ export function expandedEndpointBodyTemplate(path, tagName = '', tagDescription 
       }
       ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}
       ${pathSecurityTemplate.call(this, path.security)}
-      ${path.externalDocs?.url || path.externalDocs?.description
-        ? html`<div style="background-color:var(--bg3); padding:2px 8px 8px 8px; margin:8px 0; border-radius:var(--border-radius)"> 
-            <div class="m-markdown"> ${unsafeHTML(marked(path.externalDocs?.description || ''))} </div>
-            ${path.externalDocs?.url
-              ? html`<div> <a href="${path.externalDocs?.url}" target="_blank"> 
-                  ${path.externalDocs?.url} <div style="transform: rotate(270deg) scale(1.5); display: inline-block; margin-left:5px">⇲</div>
-                </a> </div>`
-              : ''
-            }
-          </div>`
-        : ''
-      }
       ${codeSampleTabPanel}
       <div class='expanded-req-resp-container'>
         <api-request
@@ -139,7 +91,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '', tagDescription 
           schema-hide-read-only = "${this.schemaHideReadOnly === 'never' ? 'false' : path.isWebhook ? 'false' : 'true'}"
           schema-hide-write-only = "${this.schemaHideWriteOnly === 'never' ? 'false' : path.isWebhook ? 'true' : 'false'}"
           fetch-credentials = "${this.fetchCredentials}"
-          exportparts = "wrap-request-btn:wrap-request-btn, btn:btn, btn-fill:btn-fill, btn-outline:btn-outline, btn-try:btn-try, btn-clear:btn-clear, btn-clear-resp:btn-clear-resp,
+          exportparts = "btn:btn, btn-fill:btn-fill, btn-outline:btn-outline, btn-try:btn-try, btn-clear:btn-clear, btn-clear-resp:btn-clear-resp,
             file-input:file-input, textbox:textbox, textbox-param:textbox-param, textarea:textarea, textarea-param:textarea-param, 
             anchor:anchor, anchor-param-example:anchor-param-example, schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
         > </api-request>
@@ -184,8 +136,8 @@ export default function expandedEndpointTemplate() {
       }
       </div>
     </section>
-    <section class="regular-font section-gap--read-mode" part="section-operations-in-tag">
-      ${tag.paths.map((path) => expandedEndpointBodyTemplate.call(this, path))}
+    <section class='regular-font section-gap--read-mode' part="section-operations-in-tag">
+      ${tag.paths.map((path) => expandedEndpointBodyTemplate.call(this, path, 'BBB'))}
     </section>
     `)
   }
