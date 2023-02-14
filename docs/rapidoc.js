@@ -4026,7 +4026,49 @@ customize their theme. Simply add your css to this file and yarn build.
 */
 
 /* harmony default export */ const custom_styles = (i`
-
+  .nav-method {
+    text-align: right;
+    margin-right: 11px;
+    width: 35px;
+  }
+  
+  .param-name, .param-type {
+    text-align: left;
+  }
+  
+  .m-btn {
+    box-shadow: none;
+  }
+  
+  .string {
+    
+  }
+  
+  .method-fg.patch {
+    color: var(--nav-head-color);
+  }
+  
+  .m-btn {
+    border: 1px solid var(--primary-color);
+  }
+  
+  h2 {
+    margin-top: 24px;
+  }
+  
+  .req-res-title {
+    margin-top: 15px;
+    margin-bottom: none;
+  }
+  
+  .top-gap {
+    margin-top: 24px;
+  }
+  
+  .example-panel {
+    border: none;
+    background-color: var(--bg3);
+  }
 `);
 ;// CONCATENATED MODULE: ./src/utils/common-utils.js
 /* For Delayed Event Handler Execution */
@@ -16855,7 +16897,7 @@ function expandedEndpointBodyTemplate(path, tagName = '', tagDescription = '') {
             </div>
             ` : ''}
         <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
-        ${path.isWebhook ? y`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : y`
+        ${path.isWebhook ? y`<span part="section-operation-webhook style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : y`
             <div part="section-operation-webhook-method" class="mono-font regular-font-size" style="text-align:left; direction:ltr; padding: 8px 0; color:var(--fg3)"> 
               <span part="label-operation-method" class="regular-font upper method-fg bold-text ${path.method}">${path.method}</span> 
               <span part="label-operation-path">${path.path}</span>
@@ -26661,7 +26703,7 @@ function getType(str) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("fdf734afd7a6f574c7ff")
+/******/ 		__webpack_require__.h = () => ("0752424f7a271373418f")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
