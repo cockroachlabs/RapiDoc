@@ -4,7 +4,7 @@ import { pathIsInSearch } from '~/utils/common-utils';
 
 export function expandCollapseNavBarTag(navLinkEl, action = 'toggle') {
   const tagAndPathEl = navLinkEl?.closest('.nav-bar-tag-and-paths');
-  const pathsUnderTagEl = tagAndPathEl.querySelector('.nav-bar-paths-under-tag');
+  const pathsUnderTagEl = tagAndPathEl?.querySelector('.nav-bar-paths-under-tag');
   if (tagAndPathEl) {
     const isExpanded = tagAndPathEl.classList.contains('expanded');
     if (isExpanded && (action === 'toggle' || action === 'collapse')) {
@@ -181,7 +181,7 @@ export default function navbarTemplate() {
                   data-first-path-id='${tag.firstPathId}'
                   tabindex='0'
                 >
-                  <div>${tag.name}</div>
+                  <div style="pointer-events:none;">${tag.name}</div>
                   <div class='nav-bar-tag-icon' tabindex='0' data-action='expand-collapse-tag'></div>
                 </div>
               `
